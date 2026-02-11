@@ -1,0 +1,26 @@
+enum PostStatus {
+    draft
+    published
+    archived
+}
+
+model Post {
+    id          String     @id @default(uuid())
+    title       String     @db.VarChar(255)
+    content     String     @db.Text
+    thumbnail   String?
+    is_featured Boolean    @default(false)
+    status      PostStatus @default(draft)
+    tags        String[]
+    views       Int        @default(0)
+
+    author_id String
+    author    User   @relation(fields: [author_id], references: [id])
+
+    created_at DateTime  @default(now())
+    updated_at DateTime  @updatedAt
+    comments   Comment[]
+
+    @@index([author_id])
+    @@map("posts")
+}
